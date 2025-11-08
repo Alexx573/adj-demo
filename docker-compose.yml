@@ -3,16 +3,17 @@ services:
     image: mysql:8
     container_name: adj-database
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: adj-demo
     ports:
       - "3307:3306"
     networks:
       - adj-net
     volumes:
-      - adj-volume:/var/lib/mysql
+      - adj-volume:/varlib/mysql
+
   frontend:
-    image: client:v1.0
+    image: client:v1
     build:
       context: ./client
       args:
@@ -21,16 +22,16 @@ services:
         API_BASE: /adj-api
     container_name: adj-client
     ports:
+      # PORT FORWARDING = MAPEO DE PUERTOS
+      # PC:3000 <=========> CONTENEDOR:80 <========> IMAGEN:80
       - "3000:80"
     networks:
       - adj-net
     depends_on:
       - database
-    
-  
 
   backend:
-    image: server:v1.0
+    image: server:v1
     build:
       context: ./server
     container_name: adj-server
@@ -40,23 +41,22 @@ services:
       DB_PORT: 3306
       DB_NAME: adj-demo
       DB_USER: root
-      DB_PASS: admin
+      DB_PASS: root
     ports:
       - "8081:8080"
     networks:
       - adj-net
     depends_on:
-      - frontend
+      - frontend  
 
-      #docker network create --driver bridge adj-net
-
+# Aqui se configuran las redes donde se comunican los contenedores
+#docker network create --driver bridge adj-net
 networks:
   adj-net:
     external: true
 
-  #docker volume create adj-volume
-  
+# Aqui se configuran los volumenes que se ocupan los contenedores
+# docker volume create adj-volume
 volumes:
   adj-volume:
     external: true
-  
