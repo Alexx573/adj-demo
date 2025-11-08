@@ -9,7 +9,7 @@ TestController.callToAPI = async () => {
         headers: {
             'Accept': 'application/json',
         }
-    }).then(response => res.json()).then(res =>{
+    }).then(res => res.json()).then(res =>{
         console.log(res);
     }).catch(console.log);  
 };
